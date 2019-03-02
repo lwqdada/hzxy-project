@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>控制面板</title>
+    <link href="/static/css/font-awesome.min.css" type="text/css"/>
+
+</head>
+<body style="min-height:800px; height: auto">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <div class="main-right  col-md-10 col-md-offset-2">
+            <div class="col-md-12">
+                <div class="panel panel-default panel-3">
+
+                    <div class="panel-body">
+                        <div><a><i class="glyphicon glyphicon-home"></i>控制面板</a></div>
+                    </div>
+                </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>
+

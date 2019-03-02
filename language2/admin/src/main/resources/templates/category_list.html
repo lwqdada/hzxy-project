@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>控制面板</title>
+    <style type="text/css">
+        tbody td  a{
+            color:white !important;
+        }
+    </style>
+
+</head>
+<body style="min-height:800px; height: auto">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <div class="main-right  col-md-10 col-md-offset-2">
+            <!--引入删除警告模态框-->
+            <div th:include="include/delete_modal :: deleteWarning"></div>
+
+            <div class="col-md-12">
+                <div class="panel-heading">
+                   <a onclick="history.go(-1);"><i class="glyphicon glyphicon-arrow-left" style="cursor:pointer;">返回</i></a>
+                    <h3 style="text-align: center">分类管理列表</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" >
+                    <table class="table table-hover" id="treeTable">
+                        <thead>
+                        <tr >
+                            <th>ID</th>
+                            <td>名称</td>
+                            <td>排序</td>
+                            <td>操作</td>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="entries:${categories}" th:id="${entries.id}" th:pId="${entries.parentId}">
+                            <th th:text="${entries.id}"></td>
+                            <td th:text="${entries.name}"></td>
+                            <td th:text="${entries.sortOrder}"></td>
+                            <td>
+                                <a th:href="'/category/updateCategory_form?id='+${entries.id}" type="button" class="btn btn-sm btn-default btn-primary">编辑</a>
+                                <a  th:onclick="'javascript:deleteById2(\''+${entries.id}+'\');'" type="button" class="btn btn-sm btn-default  btn-danger">删除</a>
+                                <a th:onclick="'javascript:next(\''+${entries.id}+'\');'" type="button" class="btn btn-sm btn-primary">添加下级菜单</a>
+
+
+
+
+
+
+
+                            </td>
+                        </tr>
+
+
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>
+<script>
+
+   var url= "/category/selectById?id=";
+
+  /* function deleteById2(id){
+       var deleteurl="/category/deleteByCategoryId?id="+id;
+       if(confirm("确定删除吗")){
+           /!*location.href="确认后跳转的页面";*!/
+               $.ajax({
+                   "url": deleteurl,
+                   "type": "GET",
+                   "dataType": "JSON",
+                   "success": function (data) {
+                    window.location.reload();
+                   }
+               });
+
+       }else{
+           /!*location.href="取消后跳转的页面";*!/
+       }
+   }
+*/
+  function deleteById2(deleteid) {
+
+       var deleteurl="/category/deleteAll?id=";
+
+        $.ajax({
+            "url":deleteurl +deleteid,
+            "type": "GET",
+            "dataType": "JSON",
+            "success": function (data) {
+                if (data.parentId == 0) {
+                    $("#myModalLabel").html("该节点是根节点，不可删！");
+                    geturl(null);
+
+
+                } else if (data.isParent) {
+                    $("#myModalLabel").html("该节点是父节点，将会连同子节点一块删除，确定删除？");
+                    geturl(deleteurl,deleteurl);
+                } else {
+                    geturl(deleteurl,deleteurl);
+                }
+            }
+        });
+    }
+
+    /*是否能添加下级节点*/
+    function next(nextid) {
+        var nexturl="/category/nextCategory?id="+nextid;
+        $.ajax({
+            "url":url +nextid,
+            "type": "GET",
+            "dataType": "JSON",
+            "success": function (data) {
+
+                if(data.isParent){
+                    $("#myModalLabel").html("你是否要添加下级目录！");
+                    geturl(nexturl,nexturl);
+                }else{
+                    $("#myModalLabel").html("抱歉，该节点没有权限追加下级目录！");
+                    geturl(null);
+                }
+            }
+        });
+
+    }
+
+    //根据url判断执行删除还是添加
+   function geturl( path,url) {
+       $("#warnModal").modal("show");
+
+       // 绑定删除事件
+       $("#btnModalOk").bind("click", function () {
+           $.ajax({
+               "url": path,
+               "type": "GET",
+               "dataType": "JSON",
+               "success": function (data) {
+                   $("#btnModalOk").unbind("click");
+               }
+           });
+
+
+           $("#warnModal").modal("hide");
+           if(url){
+               window.location.href=url;
+           }else{
+               window.location.reload();
+           }
+
+       });
+   }
+
+   //获取表数据
+    $(function () {
+        $('#treeTable').treeTable({
+            expendLevel:3,
+            column:0
+        })
+    });
+
+</script>
+

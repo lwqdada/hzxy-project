@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>登录</title>
+    <link href="/static/css/font-awesome.min.css" type="text/css"/>
+    <script src="/static/jquery/jquery.cookie.js"></script>
+    <style>
+        body{
+            background:url("/static/images/admin.jpg") no-repeat;
+            background-size: 100%;
+
+        }
+
+        div,input,label,a,button,h1,h2,h3,h4,h5{
+            font-family: "Microsoft Yahei" !important;
+        }
+    </style>
+
+</head>
+<body style="min-height:800px; height: auto;">
+
+<div class="col-lg-5 col-md-5 "></div>
+<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+    <div class="panel"  style="background-color:#f5f5f5; padding:0 1em 1em 1em;  margin-top: 15em;">
+        <div class="panel-heading bk-bg-primary">
+            <h4>管理员登录</h4>
+             <h6 th:text="${message}" style="color: red;"></h6>
+        </div>
+        <div class="panel-body">
+            <form  action="/user/login" method="post" >
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="输入用户名" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="输入密码" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group" >
+                        <input id="Field" name="Field" type="checkbox" class="field login-checkbox" value="First Choice" tabindex="4" />
+                        <label  for="Field" style=" font-weight:normal; font-size: 13px;"  id="remember();">记住我</label>
+                    </div>
+                </div>
+
+                <div class="form-group login-actions">
+
+                    <a  href="/user/registerForm" class="btn btn-info button-previous" style="color: white !important;">注册</a>
+
+                    <button id="login" class="button btn btn-success btn-largebtn btn-primary button-next pull-right">登录</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>
+
+
+<script>
+
+
+</script>
+

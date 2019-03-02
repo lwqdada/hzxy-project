@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>内容列表</title>
+    <link href="/static/css/trapdel-common.css"/>
+    <!-- 引入bootstrap-table样式 -->
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <!-- bootstrap-table.min.js -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <!-- 引入中文语言包 -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <!--批量删除-->
+    <script src="/static/js/trapdel.js"></script>
+    <style type="text/css">
+        #dataTable  a {
+            color:white !important;
+        }
+        #add,#trapdel{
+            position:absolute ;
+            margin-top: 9em;
+            margin-left: 5em;
+            cursor:pointer ;
+            color:black !important;
+        }
+        #trapdel{
+            margin-left: 2em;
+        }
+    </style>
+</head>
+
+<body style="min-height:800px; height: auto">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <!--左菜边栏-->
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <!--列表-->
+        <div class="main-right  col-md-10 col-md-offset-2">
+            <a onclick="history.go(-1);"><i class="glyphicon glyphicon-arrow-left" style="cursor:pointer;margin-bottom: 1em;">返回</i></a>
+            <!--引用户详情模态框-->
+            <div th:include="include/modal :: copy_modal"></div>
+
+            <!--引入删除警告模态框-->
+            <div th:include="include/delete_modal :: deleteWarning"></div>
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                       <h3>内容列表</h3>
+                    </div>
+
+                    <span onclick="delList('/content/deleteContentList','/content/list');"  class=" glyphicon glyphicon-trash"  id="trapdel" ></span>
+                    <a class="glyphicon glyphicon-plus" href="/content/content_form" id="add" ></a>
+
+
+                    <div class="panel-body">
+                        <table class="table" id="dataTable" >
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+<script >
+
+    var modal=window.document.getElementById("mody-body");
+
+    /*查看详情*/
+    function detail(url) {
+        var   str="";
+
+        //这里通过ajax请求html的方式装载进模态框中
+        $.ajax({
+            url:url,
+            style:"get",
+            dataType:"json",
+            success:function (data) {
+                var updated=DateTime.format(data.updated, "yyyy-MM-dd HH:mm:ss");
+                var created=DateTime.format(data.created, "yyyy-MM-dd HH:mm:ss");
+
+                str +=
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"编号："+'<span>'+data.id + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"父类编号："+'<span>'+data.categoryId + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"谚语："+'<span>'+data.yanyu + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"歌谣："+'<span>'+data.geyao + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"故事："+'<span>'+data.gushi + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"简介："+'<span>'+data.jinji + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"暨语："+'<span>'+data.qiyu + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"典藏图册："+'<span>'+data.dancantuce + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"图片："+'<span>'+data.pic + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"内容："+'<span>'+data.content + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"创建日期："+'<span>'+created + "</div>" +
+                    "<div class='alert alert-success' role='alert'>" +'<span>'+"更新日期："+'<span>'+updated + "</div>";
+
+                modal.innerHTML = str;
+
+                $("#myModal").modal("show");
+
+
+            }
+        });
+
+    };
+
+  $("#dataTable").bootstrapTable({ // 对应table标签的id
+      url: "/content/list", // 获取表格数据的url
+      method: "get",
+      dataType: "json",
+      search: true,
+      cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+      striped: true,  //表格显示条纹，默认为false
+      pagination: true, // 在表格底部显示分页组件，默认false
+      pageList: [10, 20], // 设置页面可以显示的数据条数
+      pageSize: 10, // 页面数据条数
+      pageNumber: 1, // 首页页码
+      sortName: 'id', // 要排序的字段
+      sortOrder: 'asc', // 排序规则
+      columns: [
+          {
+              checkbox: true, // 显示一个勾选框
+              align: 'center' // 居中显示
+          }, {
+              field: 'id', // 返回json数据中的name
+              title: '编号', // 表格表头显示文字
+              align: 'center', // 左右居中
+              valign: 'middle' // 上下居中
+          }, {
+              field: 'categoryId',
+              title: '父类id',
+              align: 'center',
+              valign: 'middle'
+          }, {
+              field: 'yanyu',
+              title: '谚语',
+              align: 'center',
+              valign: 'middle'
+
+          },{
+              field: 'geyao',
+              title: '歌谣',
+              align: 'center',
+              valign: 'middle'
+
+          },{
+              field: 'dancantuce',
+              title: '典藏图片',
+              align: 'center',
+              valign: 'middle',
+              formatter: function (value, row, index) {
+                  return ' <a style="color:black !important;" href="'+row.dancantuce+'" type="button">查看</a>';
+              }
+
+          },{
+              field: 'pic',
+              title: '图片',
+              align: 'center',
+              valign: 'middle',
+              formatter: function (value, row, index) {
+                  return ' <a style="color:black !important;" href="'+row.pic+'" type="button">查看</a>';
+              }
+
+          }, {
+              field: 'gushi',
+              title: '故事',
+              align: 'center',
+              valign: 'middle'
+
+          },{
+              field: 'updated',
+              title: '更新时间',
+              align: 'center',
+              valign: 'middle',
+              formatter: function (value, row, index) {
+                  return DateTime.format(value, "yyyy-MM-dd HH:mm:ss");
+              }
+
+          },{
+              title: "操作",
+              align: 'center',
+              valign: 'middle',
+              width: 160, // 定义列的宽度，单位为像素px
+              formatter: function (value, row, index) {
+                  var  detailurl="/content/getContentById?id="+row.id;
+                  var  deleteurl="/content/deleteByareaId?id="+row.id;
+                  return '<buttoun onclick="detail(\''+detailurl+'\');" class="btn btn-sm btn-default btn-sm glyphicon glyphicon-search" ></buttoun>' + ' <a href="/content/content_form?id='+row.id+'" type="button" class="btn btn-sm btn-default btn-primary glyphicon glyphicon-edit"></a>' +
+                      '  <a  onclick="deleteById(\'' +  deleteurl + '\');" type="button"class="btn btn-sm btn-default btn-danger glyphicon glyphicon-trash" ></a>';
+              }
+          }
+      ],
+      onLoadSuccess: function(){  //加载成功时执行
+          console.info("加载成功");
+      },
+      onLoadError: function(){  //加载失败时执行
+          console.info("加载数据失败");
+      }
+
+  })
+
+</script>
+
+</html>

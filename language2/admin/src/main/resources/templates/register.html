@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>管理员注册</title>
+    <script src="/static/js/validator.js"></script>
+    <link href="/static/css/font-awesome.min.css" type="text/css"/>
+    <style>
+        body{
+            background:url("/static/images/login.jpg") no-repeat;
+            background-size: 100%;
+
+        }
+
+        div,input,label,a,button,h1,h2,h3,h4,h5{
+            font-family: "Microsoft Yahei" !important;
+        }
+    </style>
+
+</head>
+<body style="min-height:800px; height: auto;">
+
+<div class="col-lg-5 col-md-5 "></div>
+<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+    <div class="panel"  style="background-color:#f5f5f5; padding:0 1em 1em 1em;  margin-top: 15em;">
+        <div class="panel-heading bk-bg-primary">
+            <h4>管理员注册</h4>
+        </div>
+        <div class="panel-body">
+            <form id="tryitForm" class="form-horizontal"  action="/user/adduser" method="post">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">用户名</span>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="输入用户名" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">手机号</span>
+                        <input type="text" id="phone" name="phone" class="form-control"  placeholder="输入手机号码" required/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">邮箱</span>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="输入邮箱" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">密码</span>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="输入密码" />
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+
+
+                    <button class="button btn btn-success btn-large  pull-right">注册</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>
+

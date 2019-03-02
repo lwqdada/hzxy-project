@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>新增内容</title>
+    <script src="/static/js/upload.js"></script>
+    <script src="/static/jquery/validate/jquery.validate.min.js"></script>
+    <script src="/static/jquery/validate/localization/messages_zh.js"></script>
+    <!--wangEditor-->
+    <link href="https://cdn.staticfile.org/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/wangEditor/10.0.13/wangEditor.min.js"></script>
+    <!--dropzooe-->
+    <link rel="stylesheet" href="/static/dropzone/css/dropzone.css" />
+    <script src="/static/dropzone/js/dropzone.min.js"></script>
+
+
+
+
+    <style>
+
+        #dropzone, #dropzone1 {
+            font-family: "Open Sans", Arial, sans-serif;
+            font-size: 13px;
+            direction: ltr;
+            line-height: 1.42857143;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            box-sizing: border-box;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.03);
+            border-radius: 3px;
+            background: rgba(0,0,0,0.03);
+            position: relative;
+            color: #545454;
+
+            max-height: 160px !important;
+            min-height:160px !important;
+
+            min-width:346px !important;
+
+        }
+
+
+    </style>
+
+</head>
+<body style="min-height:800px; height: auto">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <div class="col-md-1"></div>
+
+        <div class="main-right  col-md-8 col-md-offset-2">
+            <!-- tile header -->
+            <div class="tile-header panel" style="background-color:#f5f5f5;" >
+                <div class="panel-heading bk-bg-primary">
+                    <h4 class="glyphicon glyphicon-align-justify"  ><i  th:text="${areaContent.id==null}?新增内容:更新内容"></i></h4>
+                </div>
+            </div>
+            <!-- /tile header -->
+
+            <!-- tile body -->
+            <div class="tile-body  panel" style="background-color:#f5f5f5;">
+                <form  class="form-horizontal" action="/content/save" method="post"  modelAttribute="areaContent">
+                    <div>
+                        <div class="row">
+                            <input type="hidden" class="form-control" name="id" id="id"  th:value="${areaContent.id}" required />
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-4 control-label" for="categoryId">父级目录*</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" class="form-control" name="categoryId" id="categoryId"  th:value="${areaContent.categoryId}" required />
+                                    <input id="categoryName" class="form-control" placeholder="请选择对应的区域id" readonly="true" data-toggle="modal" data-target="#myModal" required/>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-4 control-label" for="yanyu">谚语俗语*</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="yanyu" name="yanyu"   placeholder="请输入谚语" th:value="${areaContent.yanyu}" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-4 control-label" for="geyao">歌谣*</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="geyao" name="geyao"   placeholder="请输入歌谣" th:value="${areaContent.geyao}" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-2 control-label" for="gushi">故事*</label>
+                                <div class="col-sm-10">
+                                    <textarea   id="gushi" name="gushi" rows="9" class="form-control" placeholder="内容" th:text="${areaContent.gushi}" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-2 control-label" for="jinji">简介</label>
+                                <div class="col-sm-10">
+                                    <textarea   id="jinji" name="jinji" rows="9" class="form-control" placeholder="简介内容" th:text="${areaContent.jinji}"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="col-sm-2 control-label" for="qiyu">暨语</label>
+                                <div class="col-sm-10">
+                                    <textarea   id="qiyu" name="qiyu" rows="9" class="form-control" placeholder="暨语内容" th:text="${areaContent.qiyu}"></textarea>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <div class="form-group col-md-6">
+                                <label class="col-sm-1 control-label" for="pic">图片</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" id="pic"  name="pic" placeholder="图片" th:value="${areaContent.pic}">
+                                    <div class="controls">
+                                        <div id="dropzone1" class="dropzone" style="max-height:220px !important;">
+                                            <span style="text-align: center; color: black;">点击或拖拽图片上传</span>
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label class="col-sm-1 control-label" for="dancantuce">典藏图片</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control" id="dancantuce"  name="dancantuce" placeholder="典藏图册" th:value="${areaContent.dancantuce}">
+                                    <div class="controls">
+                                        <div id="dropzone" class="dropzone" style="max-height:220px !important;">
+                                            <span style="text-align: center; color: black;">点击或拖拽图片上传</span>
+                                            <div class="fallback">
+
+                                                <input name="file" type="file" multiple="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                        </div>
+
+                        <div class="row" >
+
+
+
+                            <div class="form-group col-md-12">
+                                <label class="col-sm-1 control-label" for="content">内容</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="content" name="content"  th:value="${areaContent.content}">
+                                    <div id="editor" class="editor"></div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+
+
+                  <!--模态框-->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        请选择
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="modal-message">
+                                    <ul id="myTree" class="ztree">
+                                    </ul>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="btnModalOk" >
+                                        确定
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--模态框结束-->
+                    <div class="actions">
+                        <input type="button" class="btn btn-info button-previous" name="previous" onclick="history.go(-1);"  value="返回" />
+                        <input type="submit" id="btnSubmit" class="btn btn-primary button-next pull-right" name="next" value="提交" />
+                        <input type="button" class="btn btn-success button-finish pull-right" name="finish" value="Finish" style="display:none"/>
+                    </div>
+
+                </form>
+
+
+
+            </div>
+            <!-- /tile body -->
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+
+
+
+
+    DropzoneUpload("#dropzone","#dancantuce");
+    DropzoneUpload("#dropzone1","#pic");
+
+    wanditorUpload("#content");
+
+
+
+    /*zTreeTable*/
+
+    $(function () {
+        var setting={
+            async:{
+                enable:true,
+                url:"/category/tree/data",
+                autoParam:["id"]
+
+            }
+        };
+        $.fn.zTree.init($("#myTree"),setting);
+        $("#btnModalOk").bind("click",function () {
+            var zTree=$.fn.zTree.getZTreeObj("myTree");
+            var nodes=zTree.getSelectedNodes();
+            //未选择
+            if(nodes.length==0){
+                alert("请选择一个节点");
+            }else {//已选择
+                var node=nodes[0];
+                $("#categoryId").val(node.id);
+                $("#categoryName").val(node.name);
+                $("#myModal").modal("hide")
+            }
+
+        })
+    });
+
+    /*表单验证*/
+    $().ready(function() {
+        $("#contentForm").validate();
+    });
+
+
+</script>
+

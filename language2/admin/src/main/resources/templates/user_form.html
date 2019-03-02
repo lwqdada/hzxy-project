@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>用户表单</title>
+    <link href="/static/css/font-awesome.min.css" type="text/css"/>
+    <script src="/static/js/validator.js"></script>
+    <style>
+        .main-right span{
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+<body style="min-height:800px; height: auto " class="login">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <div class="main-right  col-md-10 col-md-offset-2">
+
+            <div class="col-md-3"></div>
+            <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                <div class="panel" style="background-color:#f5f5f5; padding:0 1em 1em 1em; ">
+                    <div class="panel-heading bk-bg-primary">
+                        <h4 style="text-align: center;" th:text="${user.id==null}?新增用户:更新用户" ><i class="glyphicon glyphicon-indent red"></i></h4>
+                    </div>
+                    <div class="panel-body">
+                        <!--////////-->
+                        <form  id="tryitForm" class="form-horizontal"  action="/user/save" method="post" modelAttribute="user">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="hidden" id="id" name="id" class="form-control"  th:value="${user.id}" required/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">用户名</span>
+                                    <input type="text" id="username" name="username" class="form-control" th:value="${user.username}"   required/>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <span></span>
+                                <div class="input-group">
+                                    <span class="input-group-addon">手机号码</span>
+                                    <input type="text" id="phone" name="phone" class="form-control" th:value="${user.phone}"  required/>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">邮箱</span>
+                                    <input type="email" id="email" name="email" class="form-control" th:value="${user.email}"  required/>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">密码</span>
+                                    <input type="password" id="password" name="password" class="form-control"th:value="${user.password}"  required />
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="actions">
+                                <input type="button" class="btn btn-info button-previous" name="previous" onclick="history.go(-1);"  value="返回" />
+                                <input type="submit" class="btn btn-primary button-next pull-right" name="next" value="提交" />
+                                <input type="button" class="btn btn-success button-finish pull-right" name="finish" value="Finish" style="display:none"/>
+                            </div>
+                        </form>
+
+                       <!-- <form id="tryitForm" class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-md-5">
+                                    <label class="col-sm-4 control-label" for="username">用户名</label>
+                                    <div class="8">
+                                        <input type="text" class="form-control" id="username" name="username" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group  col-md-5">
+                                    <label class="col-sm-4 control-label" for="phone">手机号码</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="phone" name="phone" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Email address</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="email" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Gender</label>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label><input type="radio" name="gender" value="male" /> Male</label>
+                                    </div>
+                                    <div class="radio">
+                                        <label><input type="radio" name="gender" value="female" /> Female</label>
+                                    </div>
+                                    <div class="radio">
+                                        <label><input type="radio" name="gender" value="other" /> Other</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-8">
+                                    <button type="submit" class="btn btn-primary">Say hello</button>
+                                </div>
+                            </div>
+                        </form>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+
+</script>
+

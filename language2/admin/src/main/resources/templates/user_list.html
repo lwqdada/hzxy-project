@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:include="include/header-plugins :: header"></th:block>
+    <title>用户列表</title>
+    <!-- 引入bootstrap-table样式 -->
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+    <!-- bootstrap-table.min.js -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <!-- 引入中文语言包 -->
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <!--批量删除-->
+    <script src="/static/js/trapdel.js"></script>
+    <!--trapdel-common-->
+    <link href="/static/css/trapdel-common.css"/>
+    <style type="text/css">
+        #dataTable  a {
+            color:white !important;
+        }
+        .panel{
+            position: relative;
+        }
+
+        #add,#trapdel{
+            position:absolute ;
+            margin-top: 9em;
+            margin-left: 5.6em;
+            cursor:pointer ;
+            color:black !important;
+        }
+        #trapdel{
+            margin-left:2em;
+        }
+
+
+    </style>
+</head>
+
+<body style="min-height:800px; height: auto">
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default row no-yj  navbar-fixed-top" th:include="include/common :: nav">
+    </nav>
+
+
+    <div class="row" style="margin-top:70px" >
+        <!--左菜边栏-->
+        <div class="  nav-left col-md-2 no-padding" id="nav-list-left" th:include="include/common :: left_menu"></div>
+
+        <!--列表-->
+        <div class="main-right  col-md-10 col-md-offset-2">
+            <a onclick="history.go(-1);"><i class="glyphicon glyphicon-arrow-left" style="cursor:pointer;margin-bottom: 1em;">返回</i></a>
+
+            <!--引用户详情模态框-->
+            <div th:include="include/modal :: copy_modal"></div>
+
+            <!--引入删除警告模态框-->
+            <div th:include="include/delete_modal :: deleteWarning"></div>
+
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                       <h3>用户列表</h3>
+
+                    </div>
+                    <span onclick="delList('/user/deleteUserList','list');"  class="glyphicon glyphicon-trash"  id="trapdel" ></span>
+                    <a class="glyphicon glyphicon-plus" href="/user/user_form" id="add" ></a>
+                    <div class="panel-body">
+
+                        <table class="table" id="dataTable" >
+                            <!--<thead>
+                            <tr>
+                                <td><input type="checkbox" id="big_box" ></td>
+                                <td> ID</td>
+                                <td> 用户名</td>
+                                <td> 密码</td>
+                                <td> 手机号码</td>
+                                <td> 邮箱</td>
+                                <td> 更新时间</td>
+                                <td> 操作</td>
+
+                            </tr>
+
+                            </thead>
+                            <tbody id="tbody-result">
+                            </tbody>-->
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</body>
+<script >
+    var modal=window.document.getElementById("mody-body");
+
+  /*查看详情*/
+  function detail(url) {
+      var   str="";
+
+      //这里通过ajax请求html的方式装载进模态框中
+      $.ajax({
+          url:url,
+          style:"get",
+          dataType:"json",
+          success:function (data) {
+               var updated=DateTime.format(data.updated, "yyyy-MM-dd HH:mm:ss");
+               var created=DateTime.format(data.created, "yyyy-MM-dd HH:mm:ss");
+
+              str +=
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"编号："+'<span>'+data.id + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"姓名："+'<span>'+data.username + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"密码："+'<span>'+data.password + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"手机："+'<span>'+data.phone + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"邮箱："+'<span>'+data.email + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"创建日期："+'<span>'+created + "</div>" +
+                  "<div class='alert alert-success' role='alert'>" +'<span>'+"更新日期："+'<span>'+updated + "</div>";
+
+              modal.innerHTML = str;
+
+              $("#myModal").modal("show");
+
+
+          }
+      });
+
+  };
+
+
+  $("#dataTable").bootstrapTable({ // 对应table标签的id
+      url: "list", // 获取表格数据的url
+      method: "get",
+      search: true,
+      dataType: "json",
+      cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+      striped: true,  //表格显示条纹，默认为false
+      pagination: true, // 在表格底部显示分页组件，默认false
+      pageList: [10, 20], // 设置页面可以显示的数据条数
+      pageSize: 10, // 页面数据条数
+      pageNumber: 1, // 首页页码
+      sortName: 'id', // 要排序的字段
+      sortOrder: 'asc', // 排序规则
+      columns: [
+          {
+              checkbox: true, // 显示一个勾选框
+              align: 'center' // 居中显示
+          }, {
+              field: 'id', // 返回json数据中的name
+              title: '编号', // 表格表头显示文字
+              align: 'center', // 左右居中
+              valign: 'middle' // 上下居中
+          }, {
+              field: 'username',
+              title: '用户名',
+              align: 'center',
+              valign: 'middle'
+          }, {
+              field: 'password',
+              title: '密码',
+              align: 'center',
+              valign: 'middle'
+
+          },{
+              field: 'phone',
+              title: '手机号码',
+              align: 'center',
+              valign: 'middle'
+
+          }, {
+              field: 'email',
+              title: '邮箱',
+              align: 'center',
+              valign: 'middle'
+
+          },{
+              field: 'updated',
+              title: '更新时间',
+              align: 'center',
+              valign: 'middle',
+              formatter: function (value, row, index) {
+                  return DateTime.format(value, "yyyy-MM-dd HH:mm:ss");
+              }
+
+          },{
+              title: "操作",
+              align: 'center',
+              valign: 'middle',
+              width: 160, // 定义列的宽度，单位为像素px
+              formatter: function (value, row, index) {
+                  var  detailurl="/user/getUserById?id="+row.id;
+                  var  deleteurl="/user/deleteById?id="+row.id;
+                  return '<buttoun  onclick="detail(\''+detailurl+'\');" class="btn btn-sm btn-default btn-sm glyphicon glyphicon-search" ></buttoun>' + ' <a href="/user/user_form?id='+row.id+'" type="button" class="btn btn-sm btn-default btn-primary glyphicon glyphicon-edit"></a>' +
+                      '  <a  type="button" onclick="deleteById(\'' +  deleteurl + '\');" class="btn btn-sm btn-default btn-danger glyphicon glyphicon-trash" ><i ></i></a>';
+              }
+          }
+      ],
+      onLoadSuccess: function(){  //加载成功时执行
+          console.info("加载成功");
+      },
+      onLoadError: function(){  //加载失败时执行
+          console.info("加载数据失败");
+      }
+
+  })
+
+
+
+</script>
+
+</html>
